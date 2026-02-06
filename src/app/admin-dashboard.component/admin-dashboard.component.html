@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="d-flex">
+  
+  <!-- ===== SIDEBAR ===== -->
+  <div class="bg-dark text-white vh-100 p-3" style="width: 250px; position: fixed;">
+    <div class="mb-4">
+      <h4><i class="fas fa-user-shield"></i> Admin Panel</h4>
+    </div>
+
+    <nav class="nav flex-column">
+      <a class="nav-link text-white" [class.active]="activeSection === 'dashboard'" (click)="navigateTo('dashboard')" style="cursor: pointer;">
+        <i class="fas fa-chart-line me-2"></i> Tableau de bord
+      </a>
+      <a class="nav-link text-white" [class.active]="activeSection === 'comptes'" (click)="navigateTo('comptes')" style="cursor: pointer;">
+        <i class="fas fa-wallet me-2"></i> Comptes bancaires
+      </a>
+      <a class="nav-link text-white" [class.active]="activeSection === 'utilisateurs'" (click)="navigateTo('utilisateurs')" style="cursor: pointer;">
+        <i class="fas fa-users me-2"></i> Utilisateurs
+      </a>
+      <a class="nav-link text-white" [class.active]="activeSection === 'creer-caissier'" (click)="navigateTo('creer-caissier')" style="cursor: pointer;">
+        <i class="fas fa-user-plus me-2"></i> Créer un caissier
+      </a>
+    </nav>
+
+    <div class="position-absolute bottom-0 mb-3">
+      <button class="btn btn-danger" (click)="logout()">
+        <i class="fas fa-sign-out-alt me-2"></i> Déconnexion
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== CONTENU PRINCIPAL ===== -->
+  <div class="flex-grow-1" style="margin-left: 250px;">
+    
+    <!-- HEADER -->
+    <nav class="navbar navbar-light bg-light border-bottom">
+      <div class="container-fluid">
+        <h2 class="mb-0">
+          <span *ngIf="activeSection === 'dashboard'">Tableau de bord</span>
+          <span *ngIf="activeSection === 'comptes'">Gestion des comptes</span>
+          <span *ngIf="activeSection === 'utilisateurs'">Gestion des utilisateurs</span>
+          <span *ngIf="activeSection === 'creer-caissier'">Créer un caissier</span>
+        </h2>
+        <button class="btn btn-outline-primary" (click)="refresh()">
+          <i class="fas fa-sync-alt"></i> Rafraîchir
+        </button>
+      </div>
+    </nav>
+
+    <!-- CONTENU -->
+    <div class="container-fluid p-4">
+      
+      <!-- LOADER -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <p class="mt-2">Chargement des données...</p>
+      </div>
+
+      <!-- MESSAGES -->
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+        <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
+        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+      </div>
+
+      <!-- ===== DASHBOARD ===== -->
+      <div *ngIf="activeSection === 'dashboard' && !isLoading">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="card text-white bg-primary">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-wallet"></i> Total Comptes</h5>
+                <h2>{{ stats.totalComptes }}</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-success">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-check-circle"></i> Comptes Actifs</h5>
+                <h2>{{ stats.comptesActifs }}</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-info">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-users"></i> Total Utilisateurs</h5>
+                <h2>{{ stats.totalUtilisateurs }}</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-warning">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-euro-sign"></i> Solde Total</h5>
+                <h2>{{ stats.soldeTotal | number:'1.2-2' }}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="fas fa-user-friends"></i> Répartition des utilisateurs</h5>
+              </div>
+              <div class="card-body">
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Clients
+                    <span class="badge bg-primary rounded-pill">{{ stats.totalClients }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Caissiers
+                    <span class="badge bg-success rounded-pill">{{ stats.totalCaissiers }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION COMPTES ===== -->
+      <div *ngIf="activeSection === 'comptes' && !isLoading">
+        
+        <!-- Recherche -->
+        <div class="mb-3">
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="searchQuery"
+            (input)="onSearch()"
+            placeholder="Rechercher par numéro de compte, nom, email...">
+        </div>
+
+        <!-- Table des comptes -->
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Numéro de compte</th>
+                    <th>Client</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Solde</th>
+                    <th>Type</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let compte of filteredComptes">
+                    <td><code>{{ compte.numeroCompte }}</code></td>
+                    <td>{{ compte.clientPrenom }} {{ compte.clientNom }}</td>
+                    <td>{{ compte.clientEmail }}</td>
+                    <td>{{ compte.clientTelephone }}</td>
+                    <td><strong>{{ compte.solde | number:'1.2-2' }} {{ compte.devise }}</strong></td>
+                    <td><span class="badge bg-secondary">{{ compte.typeCompte }}</span></td>
+                    <td>
+                      <span class="badge" [class.bg-success]="compte.actif" [class.bg-danger]="!compte.actif">
+                        {{ compte.actif ? 'Actif' : 'Bloqué' }}
+                      </span>
+                    </td>
+                    <td>
+                      <button 
+                        class="btn btn-sm"
+                        [class.btn-danger]="compte.actif"
+                        [class.btn-success]="!compte.actif"
+                        (click)="toggleStatutCompte(compte)">
+                        <i class="fas" [class.fa-lock]="compte.actif" [class.fa-unlock]="!compte.actif"></i>
+                        {{ compte.actif ? 'Bloquer' : 'Débloquer' }}
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div *ngIf="filteredComptes.length === 0" class="text-center py-4 text-muted">
+              <i class="fas fa-inbox fa-3x mb-3"></i>
+              <p>Aucun compte trouvé</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION UTILISATEURS ===== -->
+      <div *ngIf="activeSection === 'utilisateurs' && !isLoading">
+        
+        <!-- Recherche -->
+        <div class="mb-3">
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="searchQuery"
+            (input)="onSearch()"
+            placeholder="Rechercher par nom d'utilisateur, email...">
+        </div>
+
+        <!-- Table des utilisateurs -->
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Email</th>
+                    <th>Nom complet</th>
+                    <th>Téléphone</th>
+                    <th>Rôle</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of filteredUtilisateurs">
+                    <td><strong>{{ user.nomUtilisateur }}</strong></td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.prenom }} {{ user.nom }}</td>
+                    <td>{{ user.telephone || '-' }}</td>
+                    <td>
+                      <span class="badge" 
+                            [class.bg-primary]="user.role === 'ROLE_CLIENT'"
+                            [class.bg-success]="user.role === 'ROLE_CAISSIER'"
+                            [class.bg-danger]="user.role === 'ROLE_ADMIN'">
+                        {{ formatRole(user.role) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge" [class.bg-success]="user.actif" [class.bg-danger]="!user.actif">
+                        {{ user.actif ? 'Actif' : 'Inactif' }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div *ngIf="filteredUtilisateurs.length === 0" class="text-center py-4 text-muted">
+              <i class="fas fa-inbox fa-3x mb-3"></i>
+              <p>Aucun utilisateur trouvé</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION CRÉER CAISSIER ===== -->
+      <div *ngIf="activeSection === 'creer-caissier' && !isLoading">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-user-plus"></i> Créer un nouveau caissier</h5>
+              </div>
+              <div class="card-body">
+                <form (ngSubmit)="creerCaissier()">
+                  <div class="mb-3">
+                    <label for="nomUtilisateur" class="form-label">Nom d'utilisateur</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="nomUtilisateur"
+                      [(ngModel)]="nouveauCaissier.nomUtilisateur"
+                      name="nomUtilisateur"
+                      required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input 
+                      type="email" 
+                      class="form-control" 
+                      id="email"
+                      [(ngModel)]="nouveauCaissier.email"
+                      name="email"
+                      required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="motDePasse" class="form-label">Mot de passe</label>
+                    <input 
+                      type="password" 
+                      class="form-control" 
+                      id="motDePasse"
+                      [(ngModel)]="nouveauCaissier.motDePasse"
+                      name="motDePasse"
+                      required>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
+                    <i class="fas fa-user-plus me-2"></i>
+                    <span *ngIf="!isLoading">Créer le caissier</span>
+                    <span *ngIf="isLoading">Création en cours...</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

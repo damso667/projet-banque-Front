@@ -1,0 +1,27 @@
+/* Styles pour le lien actif de la sidebar */
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #fff;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Animation pour les cartes */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour le code */
+code {
+  background-color: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+}

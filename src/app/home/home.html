@@ -1,0 +1,387 @@
+<!-- landing-page.component.html -->
+
+<!-- Header avec boutons flottants -->
+<header class="fixed-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-university"></i>
+                <span>BankApp</span>
+            </a>
+            <div class="auth-buttons">
+                <button class="btn btn-outline-custom me-3" (click)="GoToLogin()" >
+                    <i class="fas fa-user-plus me-2"></i>S'inscrire
+                </button>
+                <button class="btn btn-custom" (click)="GoToLogin()">        
+                    <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                </button>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Hero Section avec Carousel d'Images -->
+<section class="hero-section">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+                <!-- Remplacez par le chemin de votre image dans assets/images/ -->
+                <img src="data:image/jpeg;base64,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" class="carousel-image" alt="Gestion Bancaire">
+                <div class="carousel-overlay"></div>
+                <div class="carousel-caption">
+                    <h1 class="display-1 fw-bold animate-text">Gérez votre</h1>
+                    <h1 class="display-1 fw-bold animate-text-delay">Avenir Financier</h1>
+                    <p class="lead mt-4 animate-fade-up">Une solution bancaire moderne et sécurisée</p>
+                    <div class="hero-cta animate-fade-up-delay">
+                        <button class="btn btn-hero btn-lg me-3">
+                            Commencer maintenant
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWuY04J2mpupF1fayWnPAYiDOzxFrKVM86-A&s" class="carousel-image" alt="Transactions Rapides">
+                <div class="carousel-overlay"></div>
+                <div class="carousel-caption">
+                    <h1 class="display-1 fw-bold animate-text">Transactions</h1>
+                    <h1 class="display-1 fw-bold animate-text-delay">Instantanées</h1>
+                    <p class="lead mt-4 animate-fade-up">Envoyez et recevez de l'argent en temps réel</p>
+                    <div class="hero-cta animate-fade-up-delay">
+                        <button class="btn btn-hero btn-lg me-3">
+                            Découvrir plus
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920" class="carousel-image" alt="Sécurité Maximale">
+                <div class="carousel-overlay"></div>
+                <div class="carousel-caption">
+                    <h1 class="display-1 fw-bold animate-text">Sécurité</h1>
+                    <h1 class="display-1 fw-bold animate-text-delay">Maximale</h1>
+                    <p class="lead mt-4 animate-fade-up">Vos données protégées par cryptage avancé</p>
+                    <div class="hero-cta animate-fade-up-delay">
+                        <button class="btn btn-hero btn-lg me-3">
+                            En savoir plus
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <div class="mouse">
+            <div class="wheel"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Carousel Section -->
+<section class="features-carousel-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 section-title">
+            <span class="title-line"></span>
+            Nos Services
+            <span class="title-line"></span>
+        </h2>
+        <div id="featuresCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <!-- Group 1 -->
+                <div class="carousel-item active">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <h3>Comptes Multiples</h3>
+                                <p>Gérez plusieurs comptes bancaires depuis une seule interface intuitive et moderne.</p>
+                                <div class="feature-number">01</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                <h3>Virements Rapides</h3>
+                                <p>Effectuez des transactions instantanées en toute sécurité vers n'importe quel compte.</p>
+                                <div class="feature-number">02</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h3>Analyse Financière</h3>
+                                <p>Suivez vos dépenses et revenus avec des graphiques détaillés et des insights.</p>
+                                <div class="feature-number">03</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Group 2 -->
+                <div class="carousel-item">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h3>Sécurité Avancée</h3>
+                                <p>Protection multicouche avec authentification biométrique et cryptage de bout en bout.</p>
+                                <div class="feature-number">04</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <h3>Notifications</h3>
+                                <p>Recevez des alertes en temps réel pour chaque transaction et activité importante.</p>
+                                <div class="feature-number">05</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <h3>Application Mobile</h3>
+                                <p>Accédez à vos comptes partout, à tout moment, depuis votre smartphone.</p>
+                                <div class="feature-number">06</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Animated Content Section -->
+<section class="content-section py-5">
+    <div class="container">
+        <div class="row align-items-center mb-5 reveal-section">
+            <div class="col-lg-6">
+                <div class="content-image-wrapper">
+                    <div class="floating-shape shape-1"></div>
+                    <div class="floating-shape shape-2"></div>
+                    <div class="content-image">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="content-title">
+                    <span class="highlight-text">Simplifiez</span> votre gestion bancaire
+                </h2>
+                <p class="content-text">
+                    Notre plateforme révolutionnaire transforme la façon dont vous gérez vos finances. 
+                    Avec une interface moderne et intuitive, BankApp vous offre un contrôle total sur 
+                    vos comptes, vos transactions et vos objectifs financiers.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Interface utilisateur moderne et responsive</li>
+                    <li><i class="fas fa-check-circle"></i> Tableaux de bord personnalisables</li>
+                    <li><i class="fas fa-check-circle"></i> Rapports financiers détaillés</li>
+                    <li><i class="fas fa-check-circle"></i> Support client 24/7</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row align-items-center mb-5 reveal-section">
+            <div class="col-lg-6 order-lg-2">
+                <div class="content-image-wrapper">
+                    <div class="floating-shape shape-3"></div>
+                    <div class="floating-shape shape-4"></div>
+                    <div class="content-image">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <h2 class="content-title">
+                    <span class="highlight-text">Sécurité</span> de niveau bancaire
+                </h2>
+                <p class="content-text">
+                    La protection de vos données est notre priorité absolue. Nous utilisons les 
+                    technologies de cryptage les plus avancées et respectons les normes de sécurité 
+                    les plus strictes de l'industrie bancaire.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Cryptage AES-256 bits</li>
+                    <li><i class="fas fa-check-circle"></i> Authentification à deux facteurs</li>
+                    <li><i class="fas fa-check-circle"></i> Surveillance 24/7 des transactions</li>
+                    <li><i class="fas fa-check-circle"></i> Conformité aux normes internationales</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row align-items-center reveal-section">
+            <div class="col-lg-6">
+                <div class="content-image-wrapper">
+                    <div class="floating-shape shape-5"></div>
+                    <div class="floating-shape shape-6"></div>
+                    <div class="content-image">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="content-title">
+                    <span class="highlight-text">Analysez</span> vos finances en profondeur
+                </h2>
+                <p class="content-text">
+                    Prenez des décisions éclairées grâce à nos outils d'analyse puissants. 
+                    Visualisez vos dépenses, identifiez les tendances et atteignez vos objectifs 
+                    financiers avec des insights personnalisés.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Graphiques interactifs en temps réel</li>
+                    <li><i class="fas fa-check-circle"></i> Catégorisation automatique des dépenses</li>
+                    <li><i class="fas fa-check-circle"></i> Prévisions et budgets intelligents</li>
+                    <li><i class="fas fa-check-circle"></i> Exportation de rapports PDF</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Utilisateurs Actifs</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Transactions</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">99%</div>
+                    <div class="stat-label">Satisfaction</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="cta-wrapper">
+            <h2 class="cta-title">Prêt à transformer votre expérience bancaire ?</h2>
+            <p class="cta-text">Rejoignez des milliers d'utilisateurs satisfaits dès aujourd'hui</p>
+            <button class="btn btn-cta btn-lg">
+                Créer un compte gratuitement
+                <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="footer-brand">
+                    <i class="fas fa-university"></i>
+                    <span>BankApp</span>
+                </div>
+                <p class="footer-description">
+                    La solution moderne pour gérer vos finances en toute simplicité et sécurité.
+                </p>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-4">
+                <h5 class="footer-title">Produits</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Comptes</a></li>
+                    <li><a href="#">Cartes</a></li>
+                    <li><a href="#">Prêts</a></li>
+                    <li><a href="#">Épargne</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-4">
+                <h5 class="footer-title">Entreprise</h5>
+                <ul class="footer-links">
+                    <li><a href="#">À propos</a></li>
+                    <li><a href="#">Carrières</a></li>
+                    <li><a href="#">Presse</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-4 mb-4">
+                <h5 class="footer-title">Support</h5>
+                <ul class="footer-links">
+                    <li><a href="#">Centre d'aide</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Sécurité</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-12 mb-4">
+                <h5 class="footer-title">Suivez-nous</h5>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="footer-copyright">&copy; 2024 BankApp. Tous droits réservés.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="footer-legal">
+                    <a href="#">Confidentialité</a>
+                    <span class="mx-2">•</span>
+                    <a href="#">Conditions</a>
+                    <span class="mx-2">•</span>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

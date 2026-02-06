@@ -1,0 +1,327 @@
+<div class="profile-container">
+
+    <!-- En-tête du profil -->
+    <!-- EN-TÊTE DU PROFIL -->
+    <div class="profile-header" *ngIf="compte && compte.client">
+        <div class="profile-avatar-large">
+            {{ compte.client.prenom.charAt(0) }}{{ compte.client.nom.charAt(0) }}
+        </div>
+        <div class="profile-header-info">
+            <h1>{{ compte.client.prenom }} {{ compte.client.nom }}</h1>
+            <p class="profile-subtitle">
+                <i class="fas fa-envelope"></i>
+                {{ compte.client.email }}
+            </p>
+            <div class="profile-badges">
+                <span class="badge badge-primary">
+                    <i class="fas fa-check-circle"></i>
+                    Compte vérifié
+                </span>
+                <span class="badge badge-info">
+                    <i class="fas fa-calendar"></i>
+                    Membre depuis {{ getAnciennete() }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div *ngIf="successMessage" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage }}
+    </div>
+
+    <!-- Onglets -->
+    <div class="tabs">
+        <button (click)="switchTab('informations')" [class.active]="activeTab === 'informations'" class="tab-button">
+            <i class="fas fa-user"></i>
+            Informations personnelles
+        </button>
+
+        <button (click)="switchTab('securite')" [class.active]="activeTab === 'securite'" class="tab-button">
+            <i class="fas fa-lock"></i>
+            Sécurité
+        </button>
+
+        <button (click)="switchTab('compte')" [class.active]="activeTab === 'compte'" class="tab-button">
+            <i class="fas fa-credit-card"></i>
+            Compte bancaire
+        </button>
+    </div>
+
+    <!-- Contenu des onglets -->
+    <div class="tab-content">
+
+        <!-- ===== ONGLET: INFORMATIONS PERSONNELLES ===== -->
+        <div *ngIf="activeTab === 'informations'" class="tab-panel">
+
+            <div class="panel-header">
+                <h2>Informations personnelles</h2>
+                <button *ngIf="!isEditMode" (click)="toggleEditMode()" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i>
+                    Modifier
+                </button>
+            </div>
+
+            <div class="profile-form">
+
+                <!-- MODE LECTURE -->
+                <div *ngIf="!isEditMode" class="info-grid">
+
+                    <div class="info-item">
+                        <label>Nom</label>
+                        <p>{{ compte.client.nom }}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Prénom</label>
+                        <p>{{ compte.client.prenom }}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Email</label>
+                        <p>{{ compte.client.email }}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Téléphone</label>
+                        <p>{{ compte.client.telephone }}</p>
+                    </div>
+
+                    <div class="info-item full-width">
+                        <label>Adresse</label>
+                        <p>{{ compte.client.adresse }}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Date d'inscription</label>
+                        <p>{{ formatDate(compte.dateCreation) }}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Ancienneté</label>
+                        <p>{{ getAnciennete() }}</p>
+                    </div>
+                </div>
+
+                <!-- MODE ÉDITION -->
+                <form *ngIf="isEditMode" (ngSubmit)="saveProfile()" class="edit-form">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom">Nom</label>
+                            <input type="text" id="nom" [(ngModel)]="editData.nom" name="nom" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prenom">Prénom</label>
+                            <input type="text" id="prenom" [(ngModel)]="editData.prenom" name="prenom" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" [(ngModel)]="editData.email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telephone">Téléphone</label>
+                        <input type="tel" id="telephone" [(ngModel)]="editData.telephone" name="telephone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adresse">Adresse</label>
+                        <textarea id="adresse" [(ngModel)]="editData.adresse" name="adresse" rows="3"
+                            required></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" (click)="toggleEditMode()" class="btn btn-secondary"
+                            [disabled]="isLoading">
+                            <i class="fas fa-times"></i>
+                            Annuler
+                        </button>
+
+                        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                            <span *ngIf="!isLoading">
+                                <i class="fas fa-save"></i>
+                                Enregistrer
+                            </span>
+                            <span *ngIf="isLoading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                Enregistrement...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== ONGLET: SÉCURITÉ ===== -->
+        <div *ngIf="activeTab === 'securite'" class="tab-panel">
+
+            <div class="panel-header">
+                <h2>Sécurité et mot de passe</h2>
+            </div>
+
+            <div class="security-content">
+
+                <!-- Informations de sécurité -->
+                <div class="security-info-card">
+                    <div class="security-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="security-text">
+                        <h3>Votre compte est sécurisé</h3>
+                        <p>Changez régulièrement votre mot de passe pour protéger votre compte</p>
+                    </div>
+                </div>
+
+                <!-- Formulaire de changement de mot de passe -->
+                <form (ngSubmit)="changePassword()" class="password-form">
+
+                    <h3>Changer le mot de passe</h3>
+
+                    <!-- Erreurs de validation -->
+                    <div *ngIf="passwordErrors.length > 0" class="validation-errors">
+                        <p *ngFor="let error of passwordErrors" class="error-item">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ error }}
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ancienMdp">Mot de passe actuel</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="ancienMdp" [(ngModel)]="passwordData.ancienMdp" name="ancienMdp"
+                                placeholder="Votre mot de passe actuel" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nouveauMdp">Nouveau mot de passe</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-key"></i>
+                            <input type="password" id="nouveauMdp" [(ngModel)]="passwordData.nouveauMdp"
+                                name="nouveauMdp" placeholder="Minimum 6 caractères" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmMdp">Confirmer le mot de passe</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-check"></i>
+                            <input type="password" id="confirmMdp" [(ngModel)]="passwordData.confirmMdp"
+                                name="confirmMdp" placeholder="Retapez le nouveau mot de passe" required>
+                        </div>
+                    </div>
+
+                    <!-- Indicateur de force du mot de passe -->
+                    <div class="password-strength" *ngIf="passwordData.nouveauMdp">
+                        <div class="strength-bar">
+                            <div class="strength-fill" [class.weak]="passwordData.nouveauMdp.length < 6"
+                                [class.medium]="passwordData.nouveauMdp.length >= 6 && passwordData.nouveauMdp.length < 10"
+                                [class.strong]="passwordData.nouveauMdp.length >= 10"
+                                [style.width.%]="passwordData.nouveauMdp.length >= 10 ? 100 : (passwordData.nouveauMdp.length >= 6 ? 60 : 30)">
+                            </div>
+                        </div>
+                        <p class="strength-text">
+                            <span *ngIf="passwordData.nouveauMdp.length < 6">Faible</span>
+                            <span
+                                *ngIf="passwordData.nouveauMdp.length >= 6 && passwordData.nouveauMdp.length < 10">Moyen</span>
+                            <span *ngIf="passwordData.nouveauMdp.length >= 10">Fort</span>
+                        </p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                        <span *ngIf="!isLoading">
+                            <i class="fas fa-key"></i>
+                            Changer le mot de passe
+                        </span>
+                        <span *ngIf="isLoading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Modification en cours...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== ONGLET: COMPTE BANCAIRE ===== -->
+        <div *ngIf="activeTab === 'compte'" class="tab-panel">
+
+            <div class="panel-header">
+                <h2>Informations bancaires</h2>
+            </div>
+
+            <div class="bank-account-card">
+                <div class="card-header">
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Votre compte bancaire</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="account-info">
+                        <label>Numéro de compte</label>
+                        <div class="account-number">
+                            <span>{{ getMaskedAccountNumber() }}</span>
+                            <button type="button" class="btn-copy" title="Copier">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="account-balance">
+                        <label>Solde actuel</label>
+                        <div class="balance-display">
+                            <span class="balance-amount">{{ compte.solde | number:'1.2-2' }}</span>
+                            <span class="balance-currency">FCFA</span>
+                        </div>
+                    </div>          
+
+                    <div class="account-details">
+                        <div class="detail-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <p class="detail-label">Date d'ouverture</p>
+                                <p class="detail-value">{{ formatDate(compte.dateCreation) }}</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="fas fa-user-circle"></i>
+                            <div>
+                                <p class="detail-label">Titulaire</p>
+                                <p class="detail-value">{{ compte.client.prenom }} {{ compte.client.nom }}</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <p class="detail-label">Statut</p>
+                                <p class="detail-value">
+                                    <span class="status-badge active">Actif</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Pour toute modification de vos informations bancaires, veuillez contacter notre service client
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

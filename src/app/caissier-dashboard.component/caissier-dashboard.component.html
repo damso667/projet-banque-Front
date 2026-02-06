@@ -1,0 +1,330 @@
+<div class="dashboard-container">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" [class.mobile-open]="isMobileMenuOpen">
+
+        <div class="sidebar-header">
+            <i class="fas fa-cash-register"></i>
+            <h2>Espace Caissier</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a (click)="navigateTo('recherche')" [class.active]="activeSection === 'recherche'" class="nav-item">
+                <i class="fas fa-search"></i>
+                <span>Rechercher un client</span>
+            </a>
+
+            <a (click)="navigateTo('operation')" [class.active]="activeSection === 'operation'"
+                [class.disabled]="!compteRecherche" class="nav-item">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>Opérations</span>
+            </a>
+
+            <a (click)="navigateTo('historique')" [class.active]="activeSection === 'historique'" class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>Historique du jour</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button (click)="logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Déconnexion</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="top-bar">
+            <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <h1 class="page-title">
+                <span *ngIf="activeSection === 'recherche'">Rechercher un client</span>
+                <span *ngIf="activeSection === 'operation'">Opérations guichet</span>
+                <span *ngIf="activeSection === 'historique'">Historique du jour</span>
+            </h1>
+
+            <div class="header-actions">
+                <div class="user-info">
+                    <span class="user-role">Caissier</span>
+                    <div class="user-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENU -->
+        <div class="content-area">
+
+            <!-- ===== SECTION: RECHERCHE ===== -->
+            <div *ngIf="activeSection === 'recherche'" class="section-recherche">
+
+                <div class="search-card">
+                    <div class="search-header">
+                        <i class="fas fa-search"></i>
+                        <h2>Rechercher un compte client</h2>
+                    </div>
+
+                    <form (ngSubmit)="rechercherCompte()" class="search-form">
+                        <div class="search-input-wrapper">
+                            <input type="text" [(ngModel)]="searchQuery" name="searchQuery"
+                                placeholder="Email ou nom d'utilisateur du client" class="search-input"
+                                [disabled]="isSearching">
+
+                            <button type="submit" class="btn-search" [disabled]="isSearching">
+                                <i class="fas" [class.fa-search]="!isSearching" [class.fa-spinner]="isSearching"
+                                    [class.fa-spin]="isSearching"></i>
+                                <span *ngIf="!isSearching">Rechercher</span>
+                                <span *ngIf="isSearching">Recherche...</span>
+                            </button>
+                        </div>
+
+                        <p *ngIf="searchError" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ searchError }}
+                        </p>
+                    </form>
+
+                    <!-- RÉSULTAT DE LA RECHERCHE -->
+                    <div *ngIf="compteRecherche" class="search-result">
+                        <div class="result-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Compte trouvé</h3>
+                        </div>
+
+                        <div class="client-info">
+                            <div class="client-avatar">
+                                {{ compteRecherche.client.prenom.charAt(0) }}{{ compteRecherche.client.nom.charAt(0) }}
+                            </div>
+
+                            <div class="client-details">
+                                <h4>{{ compteRecherche.client.prenom }} {{ compteRecherche.client.nom }}</h4>
+                                <p><i class="fas fa-envelope"></i> {{ compteRecherche.client.utilisateur.email }}</p>
+                                <p><i class="fas fa-phone"></i> {{ compteRecherche.client.telephone }}</p>
+                                <p><i class="fas fa-map-marker-alt"></i> {{ compteRecherche.client.adresse }}</p>
+                            </div>
+                        </div>
+
+                        <div class="compte-info">
+                            <div class="info-item">
+                                <label>Numéro de compte</label>
+                                <p class="numero-compte">{{ compteRecherche.numeroCompte }}</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Solde actuel</label>
+                                <p class="solde">{{ compteRecherche.solde | number:'1.2-2' }} {{ compteRecherche.devise
+                                    }}</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Type de compte</label>
+                                <p>{{ compteRecherche.typeCompte }}</p>
+                            </div>
+
+                            <div class="info-item">
+                                <label>Statut</label>
+                                <p>
+                                    <span class="badge" [class.badge-success]="compteRecherche.actif"
+                                        [class.badge-danger]="!compteRecherche.actif">
+                                        {{ compteRecherche.actif ? 'Actif' : 'Inactif' }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button (click)="navigateTo('operation')" class="btn btn-primary">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                Effectuer une opération
+                            </button>
+
+                            <button (click)="nouvelleRecherche()" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i>
+                                Nouvelle recherche
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: OPÉRATIONS ===== -->
+            <div *ngIf="activeSection === 'operation'" class="section-operation">
+
+                <!-- Message si aucun compte sélectionné -->
+                <div *ngIf="!compteRecherche" class="empty-state">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Veuillez d'abord rechercher un compte client</p>
+                    <button (click)="navigateTo('recherche')" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        Rechercher un client
+                    </button>
+                </div>
+
+                <!-- Opérations (affiché seulement si compte existe) -->
+                <div *ngIf="compteRecherche && compteRecherche.client" class="operation-content">
+
+                    <!-- Infos client en haut -->
+                    <div class="client-summary">
+                        <div class="client-avatar-small">
+                            {{ compteRecherche.client.prenom.charAt(0) }}{{ compteRecherche.client.nom.charAt(0) }}
+                        </div>
+                        <div>
+                            <h3>{{ compteRecherche.client.prenom }} {{ compteRecherche.client.nom }}</h3>
+                            <p>Solde: <strong>{{ compteRecherche.solde | number:'1.2-2' }} EUR</strong></p>
+                        </div>
+                        <button (click)="nouvelleRecherche()" class="btn-change-client">
+                            <i class="fas fa-exchange-alt"></i>
+                            Changer de client
+                        </button>
+                    </div>
+
+                    <!-- Messages -->
+                    <div *ngIf="operationSuccess" class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        {{ operationSuccess }}
+                    </div>
+
+                    <div *ngIf="operationError" class="alert alert-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ operationError }}
+                    </div>
+
+                    <!-- Choix de l'opération -->
+                    <div class="operation-choice">
+                        <button (click)="selectOperation('depot')" [class.active]="activeOperation === 'depot'"
+                            class="operation-btn depot-btn">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Dépôt d'espèces</span>
+                        </button>
+
+                        <button (click)="selectOperation('retrait')" [class.active]="activeOperation === 'retrait'"
+                            class="operation-btn retrait-btn">
+                            <i class="fas fa-minus-circle"></i>
+                            <span>Retrait d'espèces</span>
+                        </button>
+                    </div>
+
+                    <!-- Formulaire d'opération -->
+                    <div *ngIf="activeOperation" class="operation-form">
+
+                        <h3 *ngIf="activeOperation === 'depot'">
+                            <i class="fas fa-plus-circle"></i>
+                            Dépôt d'espèces
+                        </h3>
+                        <h3 *ngIf="activeOperation === 'retrait'">
+                            <i class="fas fa-minus-circle"></i>
+                            Retrait d'espèces
+                        </h3>
+
+                        <div class="form-group">
+                            <label for="montant">Montant (EUR)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-euro-sign"></i>
+                                <input type="number" id="montant" [(ngModel)]="montantOperation" name="montantOperation"
+                                    placeholder="0.00" step="0.01" min="0" [disabled]="isProcessing">
+                                <span class="currency">EUR</span>
+                            </div>
+                        </div>
+
+                        <!-- Montants rapides -->
+                        <div class="quick-amounts">
+                            <button *ngFor="let amount of [10, 20, 50, 100, 200, 500]" type="button"
+                                (click)="montantOperation = amount" [class.selected]="montantOperation === amount"
+                                class="quick-amount-btn" [disabled]="isProcessing">
+                                {{ amount }} €
+                            </button>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="operation-actions">
+                            <button type="button" (click)="resetOperation()" class="btn btn-secondary"
+                                [disabled]="isProcessing">
+                                <i class="fas fa-times"></i>
+                                Annuler
+                            </button>
+
+                            <button *ngIf="activeOperation === 'depot'" (click)="effectuerDepot()"
+                                class="btn btn-success" [disabled]="isProcessing || montantOperation <= 0">
+                                <span *ngIf="!isProcessing">
+                                    <i class="fas fa-check"></i>
+                                    Valider le dépôt
+                                </span>
+                                <span *ngIf="isProcessing">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    Traitement...
+                                </span>
+                            </button>
+
+                            <button *ngIf="activeOperation === 'retrait'" (click)="effectuerRetrait()"
+                                class="btn btn-danger" [disabled]="isProcessing || montantOperation <= 0">
+                                <span *ngIf="!isProcessing">
+                                    <i class="fas fa-check"></i>
+                                    Valider le retrait
+                                </span>
+                                <span *ngIf="isProcessing">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    Traitement...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: HISTORIQUE ===== -->
+            <div *ngIf="activeSection === 'historique'" class="section-historique">
+
+                <div class="historique-card">
+                    <div class="historique-header">
+                        <h2>
+                            <i class="fas fa-history"></i>
+                            Opérations effectuées aujourd'hui
+                        </h2>
+                        <span class="count-badge">{{ historiqueOperations.length }}</span>
+                    </div>
+
+                    <div *ngIf="historiqueOperations.length === 0" class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Aucune opération effectuée pour le moment</p>
+                    </div>
+
+                    <div *ngIf="historiqueOperations.length > 0" class="historique-list">
+                        <div *ngFor="let op of historiqueOperations" class="historique-item"
+                            [class.depot]="op.type === 'DEPOT'" [class.retrait]="op.type === 'RETRAIT'">
+
+                            <div class="op-icon">
+                                <i class="fas" [class.fa-plus-circle]="op.type === 'DEPOT'"
+                                    [class.fa-minus-circle]="op.type === 'RETRAIT'"></i>
+                            </div>
+
+                            <div class="op-details">
+                                <h4>{{ op.type === 'DEPOT' ? 'Dépôt' : 'Retrait' }}</h4>
+                                <p class="op-client">{{ op.client }}</p>
+                                <p class="op-compte">{{ op.numeroCompte }}</p>
+                                <p class="op-date">{{ formatDate(op.date) }}</p>
+                            </div>
+
+                            <div class="op-montant" [class.positive]="op.type === 'DEPOT'"
+                                [class.negative]="op.type === 'RETRAIT'">
+                                <span class="montant">
+                                    {{ op.type === 'DEPOT' ? '+' : '-' }}{{ op.montant | number:'1.2-2' }} EUR
+                                </span>
+                                <span class="nouveau-solde">
+                                    Nouveau solde: {{ op.nouveauSolde | number:'1.2-2' }} EUR
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>

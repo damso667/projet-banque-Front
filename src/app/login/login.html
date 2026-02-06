@@ -1,0 +1,101 @@
+<div class="container" id="container" [ngClass]="{ 'panel-active': isSignUpMode }">
+
+    <!-- ========== FORMULAIRE D'INSCRIPTION ========== -->
+    <!-- Formulaire d'inscription optimisé -->
+    <div class="form-container sign-up-container">
+        <form (ngSubmit)="onRegister()" #loginForm="ngForm">
+            <h1>Créer un compte</h1>
+
+            <!-- Messages en haut du formulaire -->
+            <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+            <p *ngIf="errorMessage && isSignUpMode" class="error-message">{{ errorMessage }}</p>
+
+            <div class="social-container">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <span>Ou utilisez votre email</span>
+
+            <input type="text" placeholder="Nom d'utilisateur" [(ngModel)]="nomUtilisateur" name="nomUtilisateur"
+                required>
+
+            <!-- Nom et Prénom sur la même ligne -->
+            <div class="input-row">
+                <input type="text" placeholder="Nom" [(ngModel)]="nom" name="nom" required>
+                <input type="text" placeholder="Prénom" [(ngModel)]="prenom" name="prenom" required>
+            </div>
+
+            <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required>
+
+            <input type="text" placeholder="Adresse" [(ngModel)]="adresse" name="adresse" required>
+
+            <input type="tel" placeholder="Téléphone" [(ngModel)]="telephone" name="telephone" required>
+
+            <input type="password" placeholder="Mot de passe" [(ngModel)]="motDePasseRegister" name="motDePasseRegister"
+                required>
+
+            <button type="submit" [disabled]="isLoading || loginForm.invalid">
+                <span *ngIf="!isLoading">Inscription</span>
+                <span *ngIf="isLoading">Chargement...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- ========== FORMULAIRE DE CONNEXION ========== -->
+    <div class="form-container login-container">
+        <form (ngSubmit)="onLogin()" #form="ngForm">
+            <h1>Se connecter</h1>
+            <div class="social-container">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <span>Je n'ai pas de compte</span>
+
+            <!-- Champs du formulaire de connexion -->
+            <input type="text" placeholder="Email ou nom d'utilisateur" [(ngModel)]="identifier" name="identifier"
+                required>
+
+            <input type="password" placeholder="Mot de passe" [(ngModel)]="motDePasseLogin" name="motDePasseLogin"
+                required>
+
+            <!-- Message d'erreur -->
+            <p *ngIf="errorMessage && !isSignUpMode" class="error-message">{{ errorMessage }}</p>
+
+            <!-- Message de succès -->
+            <p *ngIf="successMessage && !isSignUpMode" class="success-message">{{ successMessage }}</p>
+
+            <!-- Bouton de connexion avec indicateur de chargement -->
+            <button type="submit" [disabled]="isLoading || form.invalid">
+                <span *ngIf="!isLoading">Se connecter</span>
+                <span *ngIf="isLoading">Connexion...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- ========== OVERLAY (Panneaux de bascule) ========== -->
+    <div class="overlay-container">
+        <div class="overlay">
+            <!-- Panneau gauche (visible en mode inscription) -->
+            <div class="overlay-panel overlay-left">
+                <h1>Déjà inscrit ?</h1>
+                <p>Connectez-vous pour accéder à votre espace client.</p>
+                <button class="ghost" id="login" (click)="toggleLogin()">Se connecter</button>
+                <button class="btn-back" (click)="goToHome()" title="Retour à l'accueil">
+                    <i class="fas fa-arrow-left"></i> Retour home
+                </button>
+            </div>
+
+            <!-- Panneau droit (visible en mode connexion) -->
+            <div class="overlay-panel overlay-right">
+                <h1>Nouveau client ?</h1>
+                <p>Créez votre compte pour profiter de nos services bancaires.</p>
+                <button class="ghost" id="signUp" (click)="toggleSignUp()">Créer un compte</button>
+                <button class="btn-back" (click)="goToHome()" title="Retour à l'accueil">
+                    <i class="fas fa-arrow-left"></i> Retour Home
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

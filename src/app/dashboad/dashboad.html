@@ -1,0 +1,237 @@
+<!-- CONTENEUR PRINCIPAL -->
+<div class="dashboard-container">
+
+    <!-- ===== SIDEBAR (MENU LATÉRAL) ===== -->
+    <aside class="sidebar" [class.mobile-open]="isMobileMenuOpen">
+
+        <!-- Logo et nom de l'app -->
+        <div class="sidebar-header">
+            <i class="fas fa-university"></i>
+            <h2>Ma Banque</h2>
+        </div>
+
+        <!-- Menu de navigation -->
+        <nav class="sidebar-nav">
+            <a (click)="navigateTo('overview')" [class.active]="activeSection === 'overview'" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Tableau de bord</span>
+            </a>
+
+            <a (click)="navigateTo('transactions')" [class.active]="activeSection === 'transactions'" class="nav-item">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Mes transactions</span>
+            </a>
+
+            <a (click)="navigateTo('virement')" [class.active]="activeSection === 'virement'" class="nav-item">
+                <i class="fas fa-paper-plane"></i>
+                <span>Faire un virement</span>
+            </a>
+
+            <a (click)="navigateTo('recharge')" [class.active]="activeSection === 'recharge'" class="nav-item">
+                <i class="fas fa-plus-circle"></i>
+                <span>Recharger</span>
+            </a>
+
+            <a (click)="navigateTo('profile')" [class.active]="activeSection === 'profile'" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Mon profil</span>
+            </a>
+        </nav>
+
+        <!-- Bouton de déconnexion -->
+        <div class="sidebar-footer">
+            <button (click)="logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Déconnexion</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="main-content">
+
+        <!-- HEADER (barre du haut) -->
+        <header class="top-bar">
+            <!-- Bouton menu mobile -->
+            <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Titre de la section -->
+            <h1 class="page-title">
+                <span *ngIf="activeSection === 'overview'">Tableau de bord</span>
+                <span *ngIf="activeSection === 'transactions'">Mes transactions</span>
+                <span *ngIf="activeSection === 'virement'">Nouveau virement</span>
+                <span *ngIf="activeSection === 'recharge'">Recharger mon compte</span>
+                <span *ngIf="activeSection === 'profile'">Mon profil</span>
+            </h1>
+
+            <!-- Bouton rafraîchir et profil utilisateur -->
+            <div class="header-actions">
+                <button (click)="refresh()" class="btn-refresh" title="Rafraîchir">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+
+                <!-- APRÈS (CORRECT) -->
+                <div class="user-info" *ngIf="compte && compte.client">
+                    <span class="user-name">{{ compte.client.prenom }} {{ compte.client.nom }}</span>
+                    <div class="user-avatar">
+                        {{ compte.client.prenom.charAt(0) }}{{ compte.client.nom.charAt(0) }}
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENU DES SECTIONS -->
+        <div class="content-area">
+
+            <!-- ===== LOADER (Indicateur de chargement) ===== -->
+            <div *ngIf="isLoading" class="loader-container">
+                <div class="spinner"></div>
+                <p>Chargement de vos données...</p>
+            </div>
+
+            <!-- ===== MESSAGE D'ERREUR ===== -->
+            <div *ngIf="errorMessage" class="error-banner">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ errorMessage }}
+            </div>
+
+            <!-- ===== SECTION: OVERVIEW (Vue d'ensemble) ===== -->
+            <div *ngIf="activeSection === 'overview' && !isLoading && compte" class="section-overview">
+
+                <!-- Cartes de statistiques -->
+                <div class="stats-grid">
+
+                    <!-- Carte: Solde actuel -->
+                    <div class="stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Solde actuel</p>
+                            <h2 class="stat-value">{{ compte.solde | number:'1.2-2' }} fcfa</h2>
+                        </div>
+                    </div>
+
+                    <!-- Carte: Revenus du mois -->
+                    <div class="stat-card success">
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Revenus</p>
+                            <h2 class="stat-value">+{{ getTotalRevenus() | number:'1.2-2' }} fcfa</h2>
+                        </div>
+                    </div>
+
+                    <!-- Carte: Dépenses du mois -->
+                    <div class="stat-card danger">
+                        <div class="stat-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Dépenses</p>
+                            <h2 class="stat-value">-{{ getTotalDepenses() | number:'1.2-2' }} fcfa</h2>
+                        </div>
+                    </div>
+
+                    <!-- Carte: Nombre de transactions -->
+                    <div class="stat-card info">
+                        <div class="stat-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Transactions</p>
+                            <h2 class="stat-value">{{ transactions.length || 0 }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dernières transactions -->
+                <div class="recent-transactions">
+                    <div class="section-header">
+                        <h3>Dernières transactions</h3>
+                        <button (click)="navigateTo('transactions')" class="btn-link">
+                            Voir tout <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="transactions-list">
+                        <div *ngFor="let transaction of getDernieresTransactions()" class="transaction-item"
+                            [class.positive]="transaction.montant > 0" [class.negative]="transaction.montant < 0">
+
+                            <div class="transaction-icon">
+                                <i class="fas" [class.fa-arrow-down]="transaction.montant > 0"
+                                    [class.fa-arrow-up]="transaction.montant < 0"></i>
+                            </div>
+
+                            <div class="transaction-details">
+                                <p class="transaction-type">{{ transaction.typeTransaction }}</p>
+                                <p class="transaction-date">{{ formatDate(transaction.dateTransaction) }}</p>
+                            </div>
+
+                            <div class="transaction-amount" [class.positive]="transaction.montant > 0"
+                                [class.negative]="transaction.montant < 0">
+                                <span *ngIf="transaction.montant > 0">+</span>
+                                {{ transaction.montant | number:'1.2-2' }} fcfa
+                            </div>
+                        </div>
+
+                        <div *ngIf="!transactions || transactions.length === 0" class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>Aucune transaction pour le moment</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION: TRANSACTIONS (Liste complète) ===== -->
+            <div *ngIf="activeSection === 'transactions' && !isLoading" class="section-transactions">
+                <div class="transactions-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let transaction of transactions">
+                                <td>{{ formatDate(transaction.dateTransaction) }}</td>
+                                <td>
+                                    <span class="badge" [class.badge-success]="transaction.montant > 0"
+                                        [class.badge-danger]="transaction.montant < 0">
+                                        {{ transaction.typeTransaction }}
+                                    </span>
+                                </td>
+                                <td>{{ transaction.libelle || '-' }}</td>
+                                <td class="amount" [class.positive]="transaction.montant > 0"
+                                    [class.negative]="transaction.montant < 0">
+                                    <span *ngIf="transaction.montant > 0">+</span>
+                                    {{ transaction.montant | number:'1.2-2' }} fcfa
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div *ngIf="!transactions || transactions.length === 0" class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Aucune transaction enregistrée</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== AUTRES SECTIONS (Virement, Recharge, Profile) ===== -->
+            <!-- Tu vas les créer dans des composants séparés ci-dessous -->
+
+            <app-virement *ngIf="activeSection === 'virement'" (virementEffectue)="refresh()"></app-virement>
+
+            <app-recharge *ngIf="activeSection === 'recharge'" (rechargeEffectuee)="refresh()"></app-recharge>
+
+            <app-profile *ngIf="activeSection === 'profile' && compte" [compte]="compte"></app-profile>
+        </div>
+    </main>
+</div>

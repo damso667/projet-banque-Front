@@ -1,0 +1,131 @@
+<div class="recharge-container">
+  
+  <!-- En-tête -->
+  <div class="section-intro">
+    <div class="intro-icon">
+      <i class="fas fa-plus-circle"></i>
+    </div>
+    <div class="intro-text">
+      <h2>Recharger mon compte</h2>
+      <p>Ajoutez des fonds à votre compte instantanément</p>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="recharge-content">
+    
+    <!-- Formulaire -->
+    <div class="recharge-form">
+      
+      <!-- Messages -->
+      <div *ngIf="successMessage" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        {{ successMessage }}
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage }}
+      </div>
+
+      <!-- Montants rapides -->
+      <div class="quick-amounts-section">
+        <h3>Montants rapides</h3>
+        <div class="quick-amounts-grid">
+          <button 
+            *ngFor="let amount of montantsRapides"
+            type="button"
+            (click)="selectMontant(amount)"
+            [class.selected]="montant === amount"
+            class="quick-amount-btn">
+            {{ amount }} FCFA
+          </button>
+        </div>
+      </div>
+
+      <!-- OU Diviseur -->
+      <div class="divider">
+        <span>OU</span>
+      </div>
+
+      <!-- Montant personnalisé -->
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="montant">Montant personnalisé</label>
+          <div class="input-with-icon">
+            <i class="fas fa-euro-sign"></i>
+            <input 
+              type="number" 
+              id="montant"
+              [(ngModel)]="montant"
+              (ngModelChange)="onMontantChange()"
+              name="montant"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              [class.invalid]="montant <= 0 && montant !== 0">
+            <span class="currency">FCFA</span>
+          </div>
+          <small class="help-text">Minimum: 1.00 FCFA</small>
+        </div>
+
+        <!-- Bouton de soumission -->
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || !isValid()">
+          <span *ngIf="!isLoading">
+            <i class="fas fa-plus-circle"></i>
+            Recharger {{ montant > 0 ? (montant | number:'1.2-2') + 'FCFA' : '' }}
+          </span>
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i>  
+            Traitement en cours...
+          </span>
+        </button>
+      </form>
+
+      <!-- Info sécurité -->
+      <div class="security-info">
+        <i class="fas fa-lock"></i>
+        <p>Transaction sécurisée et instantanée</p>
+      </div>
+    </div>
+
+    <!-- Carte d'information -->
+    <div class="info-card">
+      <div class="info-header">
+        <i class="fas fa-info-circle"></i>
+        <h3>Comment ça marche ?</h3>
+      </div>
+
+      <div class="info-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Choisissez le montant</h4>
+            <p>Sélectionnez un montant rapide ou saisissez un montant personnalisé</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Validez la recharge</h4>
+            <p>Cliquez sur le bouton pour confirmer votre recharge</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Fonds disponibles</h4>
+            <p>Votre solde est mis à jour instantanément</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-note">
+        <i class="fas fa-shield-alt"></i>
+        <p><strong>100% sécurisé</strong> - Toutes vos transactions sont cryptées et protégées</p>
+      </div>
+    </div>
+  </div>
+</div>

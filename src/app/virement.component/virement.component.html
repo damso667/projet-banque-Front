@@ -1,0 +1,170 @@
+<div class="virement-container">
+  
+  <!-- En-tête de la section -->
+  <div class="section-intro">
+    <div class="intro-icon">
+      <i class="fas fa-paper-plane"></i>
+    </div>
+    <div class="intro-text">
+      <h2>Effectuer un virement</h2>
+      <p>Transférez de l'argent vers un autre compte en toute sécurité</p>
+    </div>
+  </div>
+
+  <!-- Formulaire de virement -->
+  <div class="virement-form-wrapper">
+    <form (ngSubmit)="onSubmit()" class="virement-form">
+      
+      <!-- Message de succès -->
+      <div *ngIf="successMessage" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        {{ successMessage }}
+      </div>     
+
+      <!-- Message d'erreur -->
+      <div *ngIf="errorMessage" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage }}
+      </div>
+
+      <!-- Compte source -->
+      <div class="form-group">
+        <label for="compteSource">
+          Compte source <span class="required">*</span>
+        </label>
+        <div class="input-with-icon">
+          <i class="fas fa-wallet"></i>
+          <input 
+            type="text" 
+            id="compteSource"
+            [(ngModel)]="numeroCompteSource"
+            name="numeroCompteSource"
+            placeholder="Numéro du compte source"
+            [class.invalid]="showValidationErrors && numeroCompteSource.trim() === ''"
+            required>
+        </div>
+        <small *ngIf="showValidationErrors && numeroCompteSource.trim() === ''" class="error-text">
+          Le numéro de compte source est requis
+        </small>
+      </div>
+
+      <!-- Compte destination -->
+      <div class="form-group">
+        <label for="compteDestination">
+          Compte destination <span class="required">*</span>
+        </label>
+        <div class="input-with-icon">
+          <i class="fas fa-university"></i>
+          <input 
+            type="text" 
+            id="compteDestination"
+            [(ngModel)]="numeroCompteDestination"
+            name="numeroCompteDestination"
+            placeholder="Numéro du compte bénéficiaire"
+            [class.invalid]="showValidationErrors && numeroCompteDestination.trim() === ''"
+            required>
+        </div>
+        <small *ngIf="showValidationErrors && numeroCompteDestination.trim() === ''" class="error-text">
+          Le numéro de compte destination est requis
+        </small>
+      </div>
+
+      <!-- Montant -->
+      <div class="form-group">
+        <label for="montant">
+          Montant <span class="required">*</span>
+        </label>
+        <div class="input-with-icon">
+          <i class="fas fa-euro-sign"></i>
+          <input 
+            type="number" 
+            id="montant"
+            [(ngModel)]="montant"
+            (ngModelChange)="onMontantChange()"
+            name="montant"
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            [class.invalid]="showValidationErrors && montant <= 0"
+            required>
+          <span class="currency">FCFA</span>
+        </div>
+        <small *ngIf="showValidationErrors && montant <= 0" class="error-text">
+          Le montant doit être supérieur à 0
+        </small>
+      </div>
+
+      <!-- Description (optionnel) -->
+      <div class="form-group">
+        <label for="description">
+          Description <span class="optional">(optionnel)</span>
+        </label>
+        <div class="input-with-icon">
+          <i class="fas fa-comment"></i>
+          <textarea 
+            id="description"
+            [(ngModel)]="description"
+            name="description"
+            placeholder="Ex: Loyer, Remboursement, etc."
+            rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="form-actions">
+        <button type="button" (click)="resetForm()" class="btn btn-secondary" [disabled]="isLoading">
+          <i class="fas fa-redo"></i>
+          Réinitialiser
+        </button>
+
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          <span *ngIf="!isLoading">
+            <i class="fas fa-paper-plane"></i>
+            Effectuer le virement
+          </span>
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i>
+            En cours...
+          </span>
+        </button>
+      </div>
+
+      <!-- Informations de sécurité -->
+      <div class="security-info">
+        <i class="fas fa-shield-alt"></i>
+        <p>Vos transactions sont sécurisées et cryptées</p>
+      </div>
+    </form>
+
+    <!-- Carte d'aperçu (affiche un résumé avant envoi) -->
+    <div class="virement-preview" *ngIf="numeroCompteSource && numeroCompteDestination && montant > 0">
+      <h3>Aperçu du virement</h3>
+      
+      <div class="preview-item">
+        <span class="label">De:</span>
+        <span class="value">{{ numeroCompteSource }}</span>
+      </div>
+
+      <div class="preview-arrow">
+        <i class="fas fa-arrow-down"></i>
+      </div>
+
+      <div class="preview-item">
+        <span class="label">Vers:</span>
+        <span class="value">{{ numeroCompteDestination }}</span>
+      </div>
+
+      <div class="preview-divider"></div>
+
+      <div class="preview-amount">
+        <span class="label">Montant:</span>
+        <span class="value">{{ montant | number:'1.2-2' }} FCFA</span>
+      </div>
+
+      <div class="preview-description" *ngIf="description">
+        <span class="label">Description:</span>
+        <span class="value">{{ description }}</span>
+      </div>
+    </div>
+  </div>
+</div>

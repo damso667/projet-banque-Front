@@ -1,0 +1,45 @@
+<button mat-raised-button color="primary" routerLink="/materiel">
+  Gestion du matériel
+
+</button>
+<button mat-raised-button color="primary">
+  Bouton Primary
+</button>
+
+<button mat-raised-button color="accent">
+  Bouton Accent
+</button>
+
+<h2>Formulaire Angular Material</h2>
+
+<form class="form-container" [formGroup]="form">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nom</mat-label>
+    <input matInput formControlName="nom" placeholder="Entrez votre nom">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" placeholder="exemple@mail.com">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Rôle</mat-label>
+    <mat-select formControlName="role">
+      <mat-option value="admin">Administrateur</mat-option>
+      <mat-option value="user">Utilisateur</mat-option>
+      <mat-option value="guest">Invité</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="conditions">
+    J'accepte les conditions
+  </mat-checkbox>
+
+  <button mat-raised-button color="primary" type="submit">
+    Envoyer
+  </button>
+
+</form>
+

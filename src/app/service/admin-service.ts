@@ -40,7 +40,7 @@ interface CreerCaissierRequest {
 })
 export class AdminService {
   
-  private apiUrl = 'http://localhost:8080/api/admin';
+  private apiUrl = 'https://projet-bancaire.onrender.com/api/admin';
 
   constructor(private http: HttpClient) { }
 

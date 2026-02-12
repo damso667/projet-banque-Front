@@ -29,7 +29,7 @@ interface RegistrationRequest {
 })
 export class Auth {
     // URL de ton API backend
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'https://projet-bancaire.onrender.com/api/auth';
   
   // Le nom de la clé pour stocker le token dans le navigateur
   private TOKEN_KEY = 'auth-token';

@@ -64,8 +64,8 @@ interface MdpRequest {
 export class ClientService {
   
   // URL de base de l'API
-  private apiUrl = 'http://localhost:8080/api/client';
-  private userApiUrl = 'http://localhost:8080/api/utilisateur';
+  private apiUrl = 'https://projet-bancaire.onrender.com/api/client';
+  private userApiUrl = 'https://projet-bancaire.onrender.com/api/utilisateur';
 
   constructor(private http: HttpClient) { }
 

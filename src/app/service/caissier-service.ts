@@ -36,7 +36,7 @@ interface CompteInfo {
 })
 export class CaissierService {
   
-  private apiUrl = 'http://localhost:8080/api/guichet';
+  private apiUrl = 'https://projet-bancaire.onrender.com/api/guichet';
 
   constructor(private http: HttpClient) { }
 

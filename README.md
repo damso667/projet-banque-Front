@@ -1,59 +1,79 @@
-# TestMateriel
+# Banque Gestion Front
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.3.
+![Angular](https://img.shields.io/badge/Angular-20.0.3-red?style=for-the-badge&logo=angular)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![HTML/CSS](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 
-## Development server
+> Application front-end pour la gestion bancaire, conçue avec Angular. Interface moderne, responsive et intuitive.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## Sommaire
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- [À propos](#-à-propos)
+- [Fonctionnalités Principales](#-fonctionnalités-principales)
+- [Technologies Utilisées](#-technologies-utilisées)
+- [Prérequis](#-prérequis)
+- [Installation et Démarrage](#-installation-et-démarrage)
+- [Scripts Disponibles](#-scripts-disponibles)
+- [Structure du Projet](#-structure-du-projet)
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+##  À propos
 
-```bash
-ng generate component component-name
-```
+**Banque Gestion** est une interface utilisateur moderne développée pour faciliter la gestion des opérations bancaires. Ce projet (Généré avec Angular CLI) fournit une expérience fluide pour naviguer entre les différents services (connexion, inscription, gestion des comptes, etc.).
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+##  Fonctionnalités Principales
 
-```bash
-ng generate --help
-```
+-  **Authentification** : Formulaire de connexion et d'inscription sécurisé et responsive.
+-  **Responsive Design** : Interface adaptée pour ordinateurs, tablettes et smartphones.
+-  **Navigation Fluide** : Utilisation du routage Angular pour une expérience Single Page Application (SPA).
+- **UI/UX Moderne** : Design épuré, animations douces et système d'alertes intégré.
 
-## Building
+## 🛠 Technologies Utilisées
 
-To build the project run:
+- **Framework** : [Angular](https://angular.io/) (v20.0.3)
+- **Langage** : TypeScript, HTML5, CSS3
+- **Outils** : Angular CLI, RxJS
 
-```bash
-ng build
-```
+##  Prérequis
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Avant de lancer le projet, assurez-vous d'avoir installé les outils suivants :
 
-## Running unit tests
+- [Node.js](https://nodejs.org/) (version LTS recommandée)
+- [Angular CLI](https://github.com/angular/angular-cli) (`npm install -g @angular/cli`)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+##  Installation et Démarrage
 
-```bash
-ng test
-```
+1. **Cloner le dépôt** (si ce n'est pas déjà fait)
 
-## Running end-to-end tests
+   ```bash
+   git clone https://github.com/damso667/projet-banque-Front.git
+   cd projet-banque-Front
+   ```
 
-For end-to-end (e2e) testing, run:
+2. **Installer les dépendances**
 
-```bash
-ng e2e
-```
+   ```bash
+   npm install
+   ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+3. **Lancer le serveur de développement**
+   ```bash
+   ng serve
+   ```
+   _L'application sera accessible sur `http://localhost:4200/`. L'application se rechargera automatiquement si vous modifiez un fichier source._
 
-## Additional Resources
+## 📜 Scripts Disponibles
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Dans le répertoire du projet, vous pouvez exécuter :
+
+- `ng serve` : Lance le serveur de développement.
+- `ng build` : Compile le projet dans le dossier `dist/`. La version de production optimise l'application pour de meilleures performances.
+- `ng test` : Exécute les tests unitaires via [Karma](https://karma-runner.github.io).
+- `ng generate component [nom]` : Génère un nouveau composant via l'outil Angular CLI.
+
+---
+
+

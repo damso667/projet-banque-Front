@@ -356,22 +356,125 @@ p {
 }
 
 /* ========== RESPONSIVE ========== */
+.mobile-toggle {
+  display: none;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.mobile-toggle a {
+  color: #00203f;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-back-mobile {
+  display: none;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: transparent;
+  border: none;
+  color: #00203f;
+  font-size: 24px;
+  z-index: 1000;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.btn-back-mobile:active {
+  transform: scale(0.9);
+}
+
 @media (max-width: 768px) {
+  body {
+    background-color: #fff;
+  }
+
   .container {
-    min-height: 500px;
+    min-height: 100vh;
+    border-radius: 0;
     width: 100%;
+    max-width: 100%;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
   }
-  
+
+  .form-container {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.4s ease-in-out;
+  }
+
   form {
-    padding: 15px 25px;
+    padding: 60px 20px 40px;
+    height: 100%;
+    justify-content: center;
   }
-  
+
+  /* Hide the desktop overlay completely on mobile */
+  .overlay-container {
+    display: none;
+  }
+
+  /* Show mobile controls */
+  .mobile-toggle {
+    display: block;
+  }
+  .btn-back-mobile {
+    display: block;
+  }
+
+  /* Control visibility with opacity and z-index instead of X-translate */
+  .sign-up-container {
+    transform: translateX(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .container.panel-active .sign-up-container {
+    transform: translateX(0) !important;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 5;
+  }
+
+  .login-container {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 5;
+  }
+
+  .container.panel-active .login-container {
+    transform: translateX(0) !important;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
   input {
-    padding: 8px 12px;
-    font-size: 13px;
+    padding: 12px 15px;
+    font-size: 14px;
+    margin: 8px 0;
   }
-  
+
   h1 {
-    font-size: 20px;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  button {
+    margin-top: 20px;
+    width: 100%;
   }
 }

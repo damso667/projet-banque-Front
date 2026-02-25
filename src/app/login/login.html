@@ -1,5 +1,10 @@
 <div class="container" id="container" [ngClass]="{ 'panel-active': isSignUpMode }">
 
+    <!-- Bouton retour mobile -->
+    <button class="btn-back-mobile" (click)="goToHome()" title="Retour à l'accueil">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
     <!-- ========== FORMULAIRE D'INSCRIPTION ========== -->
     <!-- Formulaire d'inscription optimisé -->
     <div class="form-container sign-up-container">
@@ -39,6 +44,9 @@
                 <span *ngIf="!isLoading">Inscription</span>
                 <span *ngIf="isLoading">Chargement...</span>
             </button>
+
+            <p class="mobile-toggle">Déjà inscrit ? <a href="javascript:void(0)" (click)="toggleLogin()">Se
+                    connecter</a></p>
         </form>
     </div>
 
@@ -71,6 +79,9 @@
                 <span *ngIf="!isLoading">Se connecter</span>
                 <span *ngIf="isLoading">Connexion...</span>
             </button>
+
+            <p class="mobile-toggle">Nouveau client ? <a href="javascript:void(0)" (click)="toggleSignUp()">Créer un
+                    compte</a></p>
         </form>
     </div>
 

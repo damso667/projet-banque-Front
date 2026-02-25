@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, NgZone } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClientService, Compte, UpdateProfilRequest } from '../service/client-service';
@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit {
   // ===== VALIDATION MOT DE PASSE =====
   passwordErrors: string[] = [];
 
-  constructor(private clientService: ClientService) { }
+  constructor(private clientService: ClientService, private ngZone: NgZone) { }
 
   ngOnInit(): void {
     // Initialise les données d'édition avec les données du compte
@@ -243,15 +243,29 @@ export class ProfileComponent implements OnInit {
   isCopied: boolean = false;
 
   copyAccountNumber(): void {
-    if (this.compte && this.compte.numeroCompte) {
-      navigator.clipboard.writeText(this.compte.numeroCompte).then(() => {
+    const numero = this.compte?.numeroCompte;
+    if (!numero) return;
+
+    // Fallback fiable : utilise un textarea caché
+    const textarea = document.createElement('textarea');
+    textarea.value = numero;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+      document.execCommand('copy');
+      this.ngZone.run(() => {
         this.isCopied = true;
         setTimeout(() => {
           this.isCopied = false;
-        }, 2000); // L'icône revient à la normale après 2 secondes
-      }).catch(err => {
-        console.error("Erreur lors de la copie : ", err);
+        }, 2000);
       });
+    } catch (err) {
+      console.error('Erreur lors de la copie :', err);
+    } finally {
+      document.body.removeChild(textarea);
     }
   }
 }

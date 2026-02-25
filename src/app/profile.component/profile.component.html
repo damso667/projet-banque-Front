@@ -272,8 +272,8 @@
                         <label>Numéro de compte</label>
                         <div class="account-number">
                             <span>{{ getMaskedAccountNumber() }}</span>
-                            <button type="button" class="btn-copy" title="Copier">
-                                <i class="fas fa-copy"></i>
+                            <button type="button" class="btn-copy" title="Copier" (click)="copyAccountNumber()">
+                                <i class="fas" [ngClass]="isCopied ? 'fa-check text-success' : 'fa-copy'"></i>
                             </button>
                         </div>
                     </div>
@@ -284,7 +284,7 @@
                             <span class="balance-amount">{{ compte.solde | number:'1.2-2' }}</span>
                             <span class="balance-currency">FCFA</span>
                         </div>
-                    </div>          
+                    </div>
 
                     <div class="account-details">
                         <div class="detail-item">
